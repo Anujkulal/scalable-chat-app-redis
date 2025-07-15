@@ -1,4 +1,15 @@
-# Turborepo starter
+#
+
+## Web socket Architecture
+
+- lets say we have a users like U1, U2 and U3 connected to `server1 (socket.io)` and U4 connected to `server2 (socket.io)` (assume U4 is on server2 bcz of increased load on server1) (auto scalling).
+- U1, U2 and U3 can communicate with each other.
+- U1, U2 or U3 cannot communicate with U4 bcz they are on different servers.
+- to solve this problem we are using `redis` or `valkey` running on Aiven platform. (here used valkey).
+- `redis` will be on the top layer which uses pub/sub architeture.
+- This allows many users to communicate with each other even if it is in different server (U1, U2, U3 and U4 can see the messages).
+
+## Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.
 
@@ -9,6 +20,63 @@ Run the following command:
 ```sh
 npx create-turbo@latest
 ```
+
+### To run
+
+```sh
+yarn dev
+```
+
+### Create a /server dir inside /app
+
+```sh
+mkdir server
+```
+
+### Add TS
+
+```sh
+yarn workspace server add typescript -D
+yarn workspace server add tsc-watch -D
+```
+
+### Initialize TS
+
+```sh
+tsc --init
+touch package.json
+```
+
+### Add inside package.json
+
+```json
+{
+    "name": "server",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node dist/index",
+        "build": "tsc -p .",
+        "dev": "tsc-watch --onSuccess \"node dist/index.js\" "
+    }
+}
+```
+
+### edit tsconfig.json
+
+```json
+    "rootDir": "./src",  
+    "outDir": "./dist",
+```
+
+#### On client side or frontend install socket.io-client
+
+```sh
+yarn workspace web add socket.io-client
+```
+
+---
+---
 
 ## What's inside?
 
